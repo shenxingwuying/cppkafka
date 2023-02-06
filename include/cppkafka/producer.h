@@ -31,6 +31,7 @@
 #define CPPKAFKA_PRODUCER_H
 
 #include <memory>
+#include <mutex>
 #include "kafka_handle_base.h"
 #include "configuration.h"
 #include "buffer.h"
@@ -162,6 +163,15 @@ public:
      * \param timeout The timeout used on this call
      */
     void flush(std::chrono::milliseconds timeout);
+
+    /**
+     * @brief Purge all producer's messages in interval queue
+     * 
+     * This translates into a call to rd_kafka_purge
+     *
+     * \remark 
+     */
+    void purge();
 private:
 #if (RD_KAFKA_VERSION >= RD_KAFKA_HEADERS_SUPPORT_VERSION)
     void do_produce(const MessageBuilder& builder, MessageBuilder::HeaderListType&& headers);
@@ -170,6 +180,7 @@ private:
     void do_produce(const MessageBuilder& builder);
     void do_produce(const Message& message);
 #endif
+
     
     // Members
     PayloadPolicy message_payload_policy_;

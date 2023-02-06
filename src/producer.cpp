@@ -118,6 +118,12 @@ void Producer::flush(milliseconds timeout) {
     check_error(result);
 }
 
+void Producer::purge() {
+    int flag = RD_KAFKA_PURGE_F_QUEUE | RD_KAFKA_PURGE_F_ABORT_TXN | RD_KAFKA_PURGE_F_NON_BLOCKING;
+    auto result = rd_kafka_purge(get_handle(), flag);
+    check_error(result);
+}
+
 #if (RD_KAFKA_VERSION >= RD_KAFKA_HEADERS_SUPPORT_VERSION)
 
 void Producer::do_produce(const MessageBuilder& builder,
